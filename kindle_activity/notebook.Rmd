@@ -1,6 +1,8 @@
 ---
 title: "My Kindle Activity"
 output: 
+  html_document: 
+    toc: yes
   github_document: 
     toc: yes
 editor_options: 
