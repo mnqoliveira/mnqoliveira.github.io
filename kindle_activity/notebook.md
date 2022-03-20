@@ -1,22 +1,20 @@
----
-title: "My Kindle Activity"
-output: 
-  github_document: 
-    toc: yes
-editor_options: 
-  markdown: 
-    wrap: 72
-  chunk_output_type: console
----
+My Kindle Activity
+================
+
+-   [Preamble](#preamble)
+-   [For how long has Frodo kept me
+    company?](#for-how-long-has-frodo-kept-me-company)
+-   [When was I reading what?](#when-was-i-reading-what)
+-   [Time to go to bed](#time-to-go-to-bed)
 
 ### Preamble
 
-I find Kindle Insights not as insightful as I wanted them to be, so 
-I requested my Kindle data and dug into some of my reading habits by myself. 
-This analysis uses data from the ReadingSession file (with some personal data removed).
+I find Kindle Insights not as insightful as I wanted them to be, so I
+requested my Kindle data and dug into some of my reading habits by
+myself. This analysis uses data from the ReadingSession file (with some
+personal data removed).
 
-```{r, message=FALSE, warning=FALSE}
-
+``` r
 library("tidyverse")
 library("lubridate")
 
@@ -26,10 +24,9 @@ library("paletteer")
 #library('rvest')
 ```
 
-```{r}
+``` r
 read_session <- read.csv("./data/Kindle.Devices.ReadingSession_mod.csv") %>%
   filter(ASIN != "")
-
 ```
 
 I soon found out the logs do not include the name of the books, but they
@@ -41,8 +38,7 @@ It should. But I naively forgot that this would likely not be allowed so
 here I am with a chunk of code I do not recommend you to run or Amazon
 will flag you and block you from running automated searches.
 
-```{r}
-
+``` r
 # asins <- data.frame(ASIN=unique(read_session$ASIN),
 #                     title=NA)
 # 
@@ -89,11 +85,12 @@ will flag you and block you from running automated searches.
 #   mutate(title = gsub(" - $", "", title))
 ```
 
-After briefly succeeding, i. e., the code worked for a few IDs and stopped, I
-realized I would not be able to pursue this path. So I decided to do
-gather the names manually. I did not read that many books after all.
+After briefly succeeding, i. e., the code worked for a few IDs and
+stopped, I realized I would not be able to pursue this path. So I
+decided to do gather the names manually. I did not read that many books
+after all.
 
-```{r}
+``` r
 # asins <- data.frame(ASIN = unique(read_session$ASIN)) %>%
 #   mutate(path_book = paste0('https://www.amazon.com/gp/product/', ASIN))
 # 
@@ -103,7 +100,7 @@ gather the names manually. I did not read that many books after all.
 This version includes the names that I manually retrieved from the
 website.
 
-```{r message=FALSE, warning=FALSE}
+``` r
 asins_ <- read.csv("./data/asins_mod.csv")
 
 read_session_ <- read_session %>%
@@ -111,15 +108,32 @@ read_session_ <- read_session %>%
   select(-contains("marketplace"), -contains("content"), -path_book)
 ```
 
-```{r}
+``` r
 head(read_session_)
 ```
 
+    ##        start_timestamp        end_timestamp       ASIN total_reading_millis
+    ## 1 2018-01-20T16:47:58Z 2018-01-20T16:50:52Z B01B173GA6               173700
+    ## 2 2018-01-22T01:43:28Z 2018-01-22T02:10:26Z B00BWJC5F6              1618100
+    ## 3 2017-12-29T01:06:06Z 2017-12-29T01:11:47Z B00849BWNS               340500
+    ## 4 2017-12-30T02:14:13Z 2017-12-30T02:14:17Z B00849BWNS                 3100
+    ## 5 2018-01-20T04:15:37Z 2018-01-20T04:20:23Z B01B173GA6               286100
+    ## 6 2018-01-07T01:35:22Z 2018-01-07T01:38:13Z B00849BWNS               171100
+    ##   number_of_page_flips               title
+    ## 1                    1 Pride and Prejudice
+    ## 2                   61  The Princess Bride
+    ## 3                   20     Utilitarianism 
+    ## 4                    1     Utilitarianism 
+    ## 5                    9 Pride and Prejudice
+    ## 6                    6     Utilitarianism
+
 ### For how long has Frodo kept me company?
 
-As I was anxious because of my PhD project, I often went back to my comfort books, which were mainly The Lord of the Rings, after I bought it, and Pride and Prejudice, before that.
+As I was anxious because of my PhD project, I often went back to my
+comfort books, which were mainly The Lord of the Rings, after I bought
+it, and Pride and Prejudice, before that.
 
-```{r,  fig1, fig.align = "center", message=FALSE, warning=FALSE}
+``` r
 read_session_sum <- read_session_ %>%
   group_by(title, ASIN) %>%
   summarise(tot_hours = sum(total_reading_millis, na.rm = TRUE) / (1000 * 3600)) %>%
@@ -140,16 +154,18 @@ ggplot(read_session_sum) +
                                    hjust = 1, 
                                    size = 8),
         legend.text = element_text(size = 8))
-  
 ```
+
+<img src="notebook_files/figure-gfm/fig1-1.png" style="display: block; margin: auto;" />
 
 ### When was I reading what?
 
-I was also curious regarding at what moment in recent years I was reading, well, LotR, but also the other books from my top 15. The plot also pointed to how often daily reading
-didn't sum up to more than one hour.
+I was also curious regarding at what moment in recent years I was
+reading, well, LotR, but also the other books from my top 15. The plot
+also pointed to how often daily reading didn’t sum up to more than one
+hour.
 
-```{r fig2, fig.height = 5, fig.width = 7, fig.align = "center", message=FALSE, warning=FALSE, out.width="100%"}
-
+``` r
 topbooks <- read_session_sum[1:15, "title"]
 
 appear_order <- read_session_ %>%
@@ -199,21 +215,30 @@ ggplot(read_session_all) +
                                    size = 7),
         axis.text.y = element_text(size = 7),
         legend.text = element_text(size = 7))
-
 ```
+
+<img src="notebook_files/figure-gfm/fig2-1.png" width="100%" style="display: block; margin: auto;" />
 
 ### Time to go to bed
 
-And at which hour in the day I read more often. This one is interesting because I have the habit of reading before going to bed. But it also happens that some insomnia may hit and I end up by picking up my Kindle to take my mind out of whatever is preventing my sleep.
+And at which hour in the day I read more often. This one is interesting
+because I have the habit of reading before going to bed. But it also
+happens that some insomnia may hit and I end up by picking up my Kindle
+to take my mind out of whatever is preventing my sleep.
 
-There are some clear issues regarding Daylight Saving Time, indicated by sudden shifts in the
-hour in which I started reading, usually by October and February. These are likely related to
-DST no longer being applied in Brazil and this being ignored in the conversion I made. I've fought this battle once, I don't want to try to fix it again.
+There are some clear issues regarding Daylight Saving Time, indicated by
+sudden shifts in the hour in which I started reading, usually by October
+and February. These are likely related to DST no longer being applied in
+Brazil and this being ignored in the conversion I made. I’ve fought this
+battle once, I don’t want to try to fix it again.
 
-I also marked with vertical lines my time in the US. It looks like: I went for my Kindle in the middle of the night a lot more in 2019 than in the other years,  I went to bed later while in the US and that Jane Eyre was basically the only book that I read during the day to finish it faster.
+I also marked with vertical lines my time in the US. It looks like: I
+went for my Kindle in the middle of the night a lot more in 2019 than in
+the other years, I went to bed later while in the US and that Jane Eyre
+was basically the only book that I read during the day to finish it
+faster.
 
-```{r fig3, fig.height = 5, fig.width = 7, fig.align = "center", message=FALSE, warning=FALSE, , out.width="100%"}
-
+``` r
 read_session_all <- read_session_ %>%
   select(start_timestamp, ASIN, total_reading_millis, title) %>%
   filter(title %in% unlist(topbooks)) %>%
@@ -256,5 +281,6 @@ ggplot(read_session_all) +
                                    size = 7),
         axis.text.y = element_text(size = 7),
         legend.text = element_text(size = 7))
-
 ```
+
+<img src="notebook_files/figure-gfm/fig3-1.png" width="100%" style="display: block; margin: auto;" />
