@@ -9,7 +9,7 @@ First one includes some plots of my [Kindle reading activity](https://mnqoliveir
 
 * Leveraging high frequency data for improving crop growth estimates | Details in the [repository](https://github.com/mnqoliveira/data-assimilation-tomato-models)
 
-* [How good are the models available for estimating sugar content in sugarcane?] | [Preprint (Submitted version)](http://repositorio.unicamp.br/Busca/Download?codigoArquivo=545140)
+* [How good are the models available for estimating sugar content in sugarcane?] (https://www.sciencedirect.com/science/article/pii/S1161030119301273) | [Preprint (Submitted version)](http://repositorio.unicamp.br/Busca/Download?codigoArquivo=545140)
 
 * [From spreadsheets to sugar content modeling: A data mining approach](https://doi.org/10.1016/j.compag.2016.11.012) | [Preprint (Peer-reviewed version)](http://repositorio.unicamp.br/Busca/Download?codigoArquivo=545142)
 
