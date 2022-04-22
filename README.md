@@ -5,7 +5,7 @@ A place to organize some side projects.
 First one includes some plots of my [Kindle reading activity](https://mnqoliveira.github.io/kindle_activity/notebook.html).
 
 ----
-Research
+*Published research*
 
 * Leveraging high frequency data for improving crop growth estimates | Details in the [repository](https://github.com/mnqoliveira/data-assimilation-tomato-models)
 
